@@ -3,6 +3,7 @@
     <div class="page-header">
       <h2>{{ t('reports.title') }}</h2>
       <p>{{ t('reports.description') }}</p>
+      <p v-if="selectedPeriod !== 'all'" class="filter-note">{{ t('reports.timePeriodNote') }}</p>
     </div>
 
     <div v-if="loading" class="loading">{{ t('reports.loading') }}</div>
@@ -259,6 +260,7 @@ export default {
 
     return {
       t,
+      selectedPeriod,
       loading,
       error,
       hasData,
@@ -440,6 +442,17 @@ export default {
   text-align: center;
   padding: 3rem;
   color: #64748b;
+}
+
+/* Shown when a time period is selected, since this page deliberately ignores it */
+.filter-note {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: #92400e;
+  background: #fef3c7;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  display: inline-block;
 }
 
 /* Distinct from .loading so "no data" doesn't read as "still fetching" */

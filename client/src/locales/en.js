@@ -210,6 +210,7 @@ export default {
     description: 'View quarterly performance metrics and monthly trends',
     loading: 'Loading reports...',
     loadError: 'Failed to load reports',
+    timePeriodNote: 'Time period does not apply here - quarterly and monthly views always cover the full year.',
     quarterly: {
       title: 'Quarterly Performance',
       quarter: 'Quarter',

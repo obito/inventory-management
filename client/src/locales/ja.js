@@ -210,6 +210,7 @@ export default {
     description: '四半期の業績指標と月次推移を表示',
     loading: 'レポートを読み込み中...',
     loadError: 'レポートの読み込みに失敗しました',
+    timePeriodNote: '期間フィルターはこのページには適用されません。四半期および月次ビューは常に通年を表示します。',
     quarterly: {
       title: '四半期業績',
       quarter: '四半期',

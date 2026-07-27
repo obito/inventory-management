@@ -14,6 +14,11 @@ function buildFilterParams(filters = {}, fields = ['warehouse', 'category', 'sta
   return params.toString()
 }
 
+// Reports are inherently multi-month: a month filter collapses the trend chart to
+// one bar and leaves every month-over-month cell with nothing to diff against.
+// Spending's chart endpoints omit it for the same reason.
+const REPORT_FILTER_FIELDS = ['warehouse', 'category', 'status']
+
 export const api = {
   async getInventory(filters = {}) {
     const response = await axios.get(`${API_BASE_URL}/inventory?${buildFilterParams(filters, ['warehouse', 'category'])}`)
@@ -71,12 +76,12 @@ export const api = {
   },
 
   async getQuarterlyReports(filters = {}) {
-    const response = await axios.get(`${API_BASE_URL}/reports/quarterly?${buildFilterParams(filters)}`)
+    const response = await axios.get(`${API_BASE_URL}/reports/quarterly?${buildFilterParams(filters, REPORT_FILTER_FIELDS)}`)
     return response.data
   },
 
   async getMonthlyTrends(filters = {}) {
-    const response = await axios.get(`${API_BASE_URL}/reports/monthly-trends?${buildFilterParams(filters)}`)
+    const response = await axios.get(`${API_BASE_URL}/reports/monthly-trends?${buildFilterParams(filters, REPORT_FILTER_FIELDS)}`)
     return response.data
   },
 
