@@ -153,6 +153,6 @@ export default {
 
 <style scoped>
 .numeric {
-  font-family: var(--font-mono);
+  font-family: var(--font-numeric);
 }
 </style>

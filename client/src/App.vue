@@ -224,11 +224,13 @@ body {
 }
 
 .logo h1 {
+  font-family: var(--font-heading);
   font-size: 1.375rem;
   font-weight: 700;
   /* Sits on --color-nav-bg (a panel-family surface), not --color-bg */
   color: var(--color-panel-text-heading);
-  letter-spacing: -0.025em;
+  text-transform: var(--display-transform);
+  letter-spacing: var(--display-tracking);
 }
 
 .subtitle {
@@ -246,12 +248,15 @@ body {
 }
 
 .nav-tabs a {
+  font-family: var(--font-heading);
   padding: 0.625rem 1.25rem;
   /* Sits on --color-nav-bg (a panel-family surface), not --color-bg */
   color: var(--color-panel-text-secondary);
   text-decoration: none;
   font-weight: 500;
   font-size: 0.938rem;
+  text-transform: var(--display-transform);
+  letter-spacing: var(--nav-tracking);
   border-radius: var(--radius-control);
   transition: all 0.2s ease;
   position: relative;
@@ -290,11 +295,13 @@ body {
 }
 
 .page-header h2 {
+  font-family: var(--font-heading);
   font-size: 1.875rem;
   font-weight: 700;
   color: var(--color-text-heading);
   margin-bottom: 0.375rem;
-  letter-spacing: -0.025em;
+  text-transform: var(--display-transform);
+  letter-spacing: var(--display-tracking);
 }
 
 .page-header p {
@@ -311,9 +318,12 @@ body {
 
 .stat-card {
   background: var(--color-panel);
+  /* Must follow the `background` shorthand above, which resets background-image */
+  background-image: var(--panel-rivets);
   padding: 1.25rem;
   border-radius: var(--radius-panel);
   border: 1px solid var(--color-border);
+  box-shadow: var(--panel-shadow-static);
   transition: all 0.2s ease;
 }
 
@@ -323,6 +333,7 @@ body {
 }
 
 .stat-label {
+  font-family: var(--font-heading);
   /* Sits on --color-panel (a panel-family surface), not --color-bg */
   color: var(--color-panel-text-secondary);
   font-size: 0.875rem;
@@ -333,6 +344,8 @@ body {
 }
 
 .stat-value {
+  /* Numeric readout: monospace in Retro, unchanged body font in Light */
+  font-family: var(--font-numeric);
   font-size: 2.25rem;
   font-weight: 700;
   /* Sits on --color-panel (a panel-family surface), not --color-bg */
@@ -358,9 +371,12 @@ body {
 
 .card {
   background: var(--color-panel);
+  /* Must follow the `background` shorthand above, which resets background-image */
+  background-image: var(--panel-rivets);
   border-radius: var(--radius-panel);
   padding: 1.25rem;
   border: 1px solid var(--color-border);
+  box-shadow: var(--panel-shadow-static);
   margin-bottom: 1.25rem;
 }
 
@@ -374,11 +390,13 @@ body {
 }
 
 .card-title {
+  font-family: var(--font-heading);
   font-size: 1.125rem;
   font-weight: 700;
   /* Sits on --color-panel (a panel-family surface), not --color-bg */
   color: var(--color-panel-text-heading);
-  letter-spacing: -0.025em;
+  text-transform: var(--display-transform);
+  letter-spacing: var(--display-tracking);
 }
 
 .table-container {

@@ -89,6 +89,30 @@
   --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   --font-mono: 'Courier New', monospace;
+
+  /* "Character" tokens - the bits that give a theme its personality (display
+   * typeface, mono readouts, panel shadows, rivets). Every one of these is a
+   * deliberate no-op in Light so the base look is untouched, which lets the
+   * same CSS rule serve both themes instead of duplicating selectors. */
+  --font-numeric: var(--font-body);
+  --display-transform: none;
+  --display-tracking: -0.025em;
+  /* Nav tabs need looser tracking than headings once they go condensed+caps */
+  --nav-tracking: normal;
+  --panel-shadow-static: none;
+  --rivet-color: transparent;
+  /* Section labels sit on --color-bg (the page), not on a panel. */
+  --color-section-label: #475569;
+
+  /* Corner rivets for instrument panels. Defined once here (not overridden
+   * per theme) because --rivet-color alone controls visibility: transparent
+   * in Light, visible in Retro. Applied as background-image so it never
+   * collides with ::before/::after already in use on some cards. */
+  --panel-rivets:
+    radial-gradient(circle at 7px 7px, var(--rivet-color) 1.5px, transparent 1.6px),
+    radial-gradient(circle at calc(100% - 7px) 7px, var(--rivet-color) 1.5px, transparent 1.6px),
+    radial-gradient(circle at 7px calc(100% - 7px), var(--rivet-color) 1.5px, transparent 1.6px),
+    radial-gradient(circle at calc(100% - 7px) calc(100% - 7px), var(--rivet-color) 1.5px, transparent 1.6px);
 }
 
 [data-theme="retro"] {
@@ -129,10 +153,13 @@
   --color-border-hover: #4a6690;
   --color-border-subtle: #22375c;
 
-  /* Accent */
-  --color-accent: #cc6a2e;
+  /* Accent. #d9793a rather than a deeper burnt orange because this is used for
+   * text on navy (active nav tab, toggle) where the darker tone landed at
+   * ~4.4:1 - just under AA. The darker --color-section-label handles the
+   * inverse case (orange on cream), where a light tone would fail instead. */
+  --color-accent: #d9793a;
   --color-accent-hover: #a8481a;
-  --color-accent-bg: rgba(204, 106, 46, 0.2);
+  --color-accent-bg: rgba(217, 121, 58, 0.2);
 
   /* Stat card semantic values (text-only, no background, rendered on
    * --color-panel navy) */
@@ -171,4 +198,18 @@
   --font-heading: 'Big Shoulders Display', 'Arial Narrow', sans-serif;
   --font-body: 'Space Grotesk', 'Segoe UI', sans-serif;
   --font-mono: 'Share Tech Mono', 'Courier New', monospace;
+
+  /* Character tokens - see the Light block for what these are for. This is
+   * where Retro earns its look: condensed console signage for headings,
+   * monospace instrument readouts for every number, hard-offset panel
+   * shadows, and corner rivets on the instrument panels. */
+  --font-numeric: 'Share Tech Mono', 'Courier New', monospace;
+  --display-transform: uppercase;
+  --display-tracking: 0.02em;
+  --nav-tracking: 0.06em;
+  --panel-shadow-static: 3px 3px 0 rgba(9, 17, 33, 0.45);
+  --rivet-color: rgba(127, 150, 184, 0.5);
+  /* Burnt orange on cream: #a8481a is the darker accent, which clears WCAG AA
+   * on --color-bg where the lighter --color-accent (#cc6a2e) would not. */
+  --color-section-label: #a8481a;
 }

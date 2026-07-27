@@ -826,7 +826,7 @@ export default {
 .transaction-id {
   color: var(--color-panel-text-secondary);
   font-weight: 500;
-  font-family: var(--font-mono);
+  font-family: var(--font-numeric);
   font-size: 0.813rem;
 }
 
@@ -847,7 +847,7 @@ export default {
 .transaction-amount {
   font-weight: 700;
   color: var(--color-panel-text-heading);
-  font-family: var(--font-mono);
+  font-family: var(--font-numeric);
 }
 
 .text-right {

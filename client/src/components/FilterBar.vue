@@ -144,7 +144,8 @@ export default {
   border: 1px solid var(--color-border-hover);
   border-radius: var(--radius-control);
   font-size: 0.813rem;
-  color: var(--color-text-heading);
+  /* Sits on --color-panel (a panel-family surface), not --color-bg */
+  color: var(--color-panel-text-heading);
   background: var(--color-panel);
   cursor: pointer;
   transition: all 0.2s;
@@ -170,7 +171,8 @@ export default {
   background: var(--color-panel);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-control);
-  color: var(--color-text-secondary);
+  /* Sits on --color-panel (a panel-family surface), not --color-bg */
+  color: var(--color-panel-text-secondary);
   cursor: pointer;
   transition: all 0.2s;
   flex-shrink: 0;
@@ -179,7 +181,7 @@ export default {
 .reset-filters-btn:hover:not(:disabled) {
   background: var(--color-surface-hover);
   border-color: var(--color-border-hover);
-  color: var(--color-text-heading);
+  color: var(--color-panel-text-heading);
 }
 
 .reset-filters-btn:active:not(:disabled) {

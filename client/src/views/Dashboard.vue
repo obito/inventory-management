@@ -760,7 +760,7 @@ export default {
 
 <style scoped>
 .numeric {
-  font-family: var(--font-mono);
+  font-family: var(--font-numeric);
 }
 
 .page-header {
@@ -780,9 +780,12 @@ export default {
 }
 
 .section-title {
+  font-family: var(--font-heading);
   font-size: 1rem;
   font-weight: 600;
-  color: var(--color-text-table-header);
+  /* Sits directly on --color-bg (the page), so it needs a page-tuned color -
+   * the previous panel/table token was navy-tuned and washed out on cream. */
+  color: var(--color-section-label);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 1rem;
@@ -796,8 +799,11 @@ export default {
 
 .kpi-card {
   background: var(--color-panel);
+  /* Must follow the `background` shorthand above, which resets background-image */
+  background-image: var(--panel-rivets);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-panel);
+  box-shadow: var(--panel-shadow-static);
   padding: 1rem;
 }
 
@@ -806,6 +812,7 @@ export default {
 }
 
 .kpi-label {
+  font-family: var(--font-heading);
   font-size: 0.813rem;
   font-weight: 600;
   color: var(--color-panel-text-secondary);
@@ -814,6 +821,8 @@ export default {
 }
 
 .kpi-value {
+  /* Numeric readout: monospace in Retro, unchanged body font in Light */
+  font-family: var(--font-numeric);
   font-size: 2rem;
   font-weight: 700;
   color: var(--color-panel-text-heading);

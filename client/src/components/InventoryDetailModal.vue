@@ -292,7 +292,7 @@ const getSummaryCardClass = () => {
 .item-sku {
   font-size: 0.875rem;
   color: var(--color-panel-text-secondary);
-  font-family: var(--font-mono);
+  font-family: var(--font-numeric);
 }
 
 .stock-badge {

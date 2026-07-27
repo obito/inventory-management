@@ -230,7 +230,7 @@ const formatDate = (dateString) => {
 .item-sku {
   font-size: 0.875rem;
   color: var(--color-panel-text-secondary);
-  font-family: var(--font-mono);
+  font-family: var(--font-numeric);
 }
 
 .priority-badge {
@@ -347,7 +347,7 @@ const formatDate = (dateString) => {
 
 .info-value.order-id,
 .info-value.sku {
-  font-family: var(--font-mono);
+  font-family: var(--font-numeric);
   color: var(--color-accent);
 }
 
