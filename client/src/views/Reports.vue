@@ -7,7 +7,7 @@
 
     <div v-if="loading" class="loading">{{ t('reports.loading') }}</div>
     <div v-else-if="error" class="error">{{ error }}</div>
-    <div v-else-if="!hasData" class="loading">{{ t('reports.noData') }}</div>
+    <div v-else-if="!hasData" class="empty">{{ t('reports.noData') }}</div>
     <div v-else>
       <!-- Quarterly Performance -->
       <div class="card">
@@ -440,6 +440,16 @@ export default {
   text-align: center;
   padding: 3rem;
   color: #64748b;
+}
+
+/* Distinct from .loading so "no data" doesn't read as "still fetching" */
+.empty {
+  text-align: center;
+  padding: 3rem;
+  color: #64748b;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .error {

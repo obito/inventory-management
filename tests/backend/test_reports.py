@@ -192,3 +192,64 @@ class TestCategorySpendingPercentages:
 
         percentages = [c["percentage"] for c in data]
         assert percentages == sorted(percentages, reverse=True)
+
+
+class TestReportFilterEdgeCases:
+    """Filter semantics that the per-endpoint suites above do not cover."""
+
+    def test_all_filter_value_is_ignored(self, client):
+        """Test that passing 'all' is equivalent to passing no filter."""
+        baseline = client.get("/api/reports/quarterly").json()
+        explicit = client.get(
+            "/api/reports/quarterly?warehouse=all&category=all&status=all&month=all"
+        ).json()
+
+        assert explicit == baseline
+
+    def test_filter_with_no_matches_returns_empty_list(self, client):
+        """Test that a filter matching nothing returns an empty list, not an error."""
+        response = client.get("/api/reports/quarterly?warehouse=Atlantis")
+        assert response.status_code == 200
+        assert response.json() == []
+
+        response = client.get("/api/reports/monthly-trends?warehouse=Atlantis")
+        assert response.status_code == 200
+        assert response.json() == []
+
+    def test_quarterly_by_quarter_filter(self, client):
+        """Test the Q2-2025 filter form, which is distinct from a 2025-04 month."""
+        response = client.get("/api/reports/quarterly?month=Q2-2025")
+        assert response.status_code == 200
+
+        data = response.json()
+        assert len(data) == 1
+        assert data[0]["quarter"] == "Q2-2025"
+
+    def test_quarterly_by_month_keeps_only_that_quarter(self, client):
+        """Test that a January filter leaves only Q1 in quarterly reports."""
+        response = client.get("/api/reports/quarterly?month=2025-01")
+        assert response.status_code == 200
+
+        data = response.json()
+        assert len(data) == 1
+        assert data[0]["quarter"] == "Q1-2025"
+
+    def test_quarterly_multiple_filters(self, client):
+        """Test combined filters, cross-checked against the orders endpoint."""
+        query = "warehouse=San Francisco&status=delivered&month=Q1-2025"
+        quarterly = client.get(f"/api/reports/quarterly?{query}").json()
+        orders = client.get(f"/api/orders?{query}").json()
+
+        assert sum(q["total_orders"] for q in quarterly) == len(orders)
+        for quarter in quarterly:
+            assert quarter["quarter"] == "Q1-2025"
+
+    def test_monthly_revenue_matches_quarterly_revenue(self, client):
+        """Test that the two aggregations of the same orders agree."""
+        monthly = client.get("/api/reports/monthly-trends").json()
+        quarterly = client.get("/api/reports/quarterly").json()
+
+        monthly_total = sum(m["revenue"] for m in monthly)
+        quarterly_total = sum(q["total_revenue"] for q in quarterly)
+
+        assert abs(monthly_total - quarterly_total) < 0.01

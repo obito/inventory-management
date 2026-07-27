@@ -4,13 +4,19 @@ import axios from 'axios'
 // (e.g. several git worktrees served side by side). Defaults to the standard port.
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8001/api'
 
+// Serializes the global filters, dropping any set to 'all'. `fields` limits which
+// filters an endpoint accepts - inventory has no time or status dimension.
+function buildFilterParams(filters = {}, fields = ['warehouse', 'category', 'status', 'month']) {
+  const params = new URLSearchParams()
+  for (const field of fields) {
+    if (filters[field] && filters[field] !== 'all') params.append(field, filters[field])
+  }
+  return params.toString()
+}
+
 export const api = {
   async getInventory(filters = {}) {
-    const params = new URLSearchParams()
-    if (filters.warehouse && filters.warehouse !== 'all') params.append('warehouse', filters.warehouse)
-    if (filters.category && filters.category !== 'all') params.append('category', filters.category)
-
-    const response = await axios.get(`${API_BASE_URL}/inventory?${params.toString()}`)
+    const response = await axios.get(`${API_BASE_URL}/inventory?${buildFilterParams(filters, ['warehouse', 'category'])}`)
     return response.data
   },
 
@@ -20,13 +26,7 @@ export const api = {
   },
 
   async getOrders(filters = {}) {
-    const params = new URLSearchParams()
-    if (filters.warehouse && filters.warehouse !== 'all') params.append('warehouse', filters.warehouse)
-    if (filters.category && filters.category !== 'all') params.append('category', filters.category)
-    if (filters.status && filters.status !== 'all') params.append('status', filters.status)
-    if (filters.month && filters.month !== 'all') params.append('month', filters.month)
-
-    const response = await axios.get(`${API_BASE_URL}/orders?${params.toString()}`)
+    const response = await axios.get(`${API_BASE_URL}/orders?${buildFilterParams(filters)}`)
     return response.data
   },
 
@@ -46,13 +46,7 @@ export const api = {
   },
 
   async getDashboardSummary(filters = {}) {
-    const params = new URLSearchParams()
-    if (filters.warehouse && filters.warehouse !== 'all') params.append('warehouse', filters.warehouse)
-    if (filters.category && filters.category !== 'all') params.append('category', filters.category)
-    if (filters.status && filters.status !== 'all') params.append('status', filters.status)
-    if (filters.month && filters.month !== 'all') params.append('month', filters.month)
-
-    const response = await axios.get(`${API_BASE_URL}/dashboard/summary?${params.toString()}`)
+    const response = await axios.get(`${API_BASE_URL}/dashboard/summary?${buildFilterParams(filters)}`)
     return response.data
   },
 
@@ -77,24 +71,12 @@ export const api = {
   },
 
   async getQuarterlyReports(filters = {}) {
-    const params = new URLSearchParams()
-    if (filters.warehouse && filters.warehouse !== 'all') params.append('warehouse', filters.warehouse)
-    if (filters.category && filters.category !== 'all') params.append('category', filters.category)
-    if (filters.status && filters.status !== 'all') params.append('status', filters.status)
-    if (filters.month && filters.month !== 'all') params.append('month', filters.month)
-
-    const response = await axios.get(`${API_BASE_URL}/reports/quarterly?${params.toString()}`)
+    const response = await axios.get(`${API_BASE_URL}/reports/quarterly?${buildFilterParams(filters)}`)
     return response.data
   },
 
   async getMonthlyTrends(filters = {}) {
-    const params = new URLSearchParams()
-    if (filters.warehouse && filters.warehouse !== 'all') params.append('warehouse', filters.warehouse)
-    if (filters.category && filters.category !== 'all') params.append('category', filters.category)
-    if (filters.status && filters.status !== 'all') params.append('status', filters.status)
-    if (filters.month && filters.month !== 'all') params.append('month', filters.month)
-
-    const response = await axios.get(`${API_BASE_URL}/reports/monthly-trends?${params.toString()}`)
+    const response = await axios.get(`${API_BASE_URL}/reports/monthly-trends?${buildFilterParams(filters)}`)
     return response.data
   },
 
