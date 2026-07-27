@@ -211,14 +211,38 @@ const shortage = computed(() => {
 
 const totalCost = computed(() => (form.value.quantity || 0) * (form.value.unitCost || 0))
 
+// Clearing a v-model.number input leaves '' rather than a number, and '' >= 0 is
+// true in JS - so these need an explicit numeric check or a blank cost submits.
 const canSubmit = computed(() =>
   Boolean(
     form.value.supplierName.trim() &&
-    form.value.quantity > 0 &&
-    form.value.unitCost >= 0 &&
+    Number.isFinite(form.value.quantity) && form.value.quantity > 0 &&
+    Number.isFinite(form.value.unitCost) && form.value.unitCost >= 0 &&
     form.value.expectedDelivery
   )
 )
+
+// FastAPI returns `detail` as a plain string for HTTPException, but as an array of
+// {loc, msg} objects for Pydantic 422s. Interpolating the latter yields
+// "[object Object]", so flatten it into something a user can act on.
+const describeError = (err) => {
+  const detail = err.response?.data?.detail
+
+  if (typeof detail === 'string') return detail
+
+  if (Array.isArray(detail)) {
+    const messages = detail
+      .map((item) => {
+        const field = Array.isArray(item?.loc) ? item.loc[item.loc.length - 1] : null
+        return field ? `${field}: ${item.msg}` : item?.msg
+      })
+      .filter(Boolean)
+
+    if (messages.length) return messages.join('; ')
+  }
+
+  return err.message
+}
 
 const resetForm = () => {
   error.value = null
@@ -279,8 +303,7 @@ const handleSubmit = async () => {
 
     emit('po-created', created)
   } catch (err) {
-    const detail = err.response?.data?.detail
-    error.value = `${t('purchaseOrder.createError')}: ${detail || err.message}`
+    error.value = `${t('purchaseOrder.createError')}: ${describeError(err)}`
   } finally {
     submitting.value = false
   }
