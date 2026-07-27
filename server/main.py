@@ -1,7 +1,7 @@
 from datetime import date, datetime, timedelta
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from typing import List, Optional
+from typing import List, Literal, Optional
 from uuid import uuid4
 from pydantic import BaseModel
 from mock_data import inventory_items, orders, demand_forecasts, backlog_items, spending_summary, monthly_spending, category_spending, recent_transactions, purchase_orders, restocking_orders
@@ -124,17 +124,22 @@ class CreatePurchaseOrderRequest(BaseModel):
     expected_delivery_date: str
     notes: Optional[str] = None
 
+# The UI maps priority and status straight onto CSS classes, so an unexpected
+# value renders as an unstyled badge rather than failing. Constrain them here.
+TaskPriority = Literal['high', 'medium', 'low']
+TaskStatus = Literal['pending', 'completed']
+
 class Task(BaseModel):
     id: str
     title: str
-    priority: str
-    dueDate: str
-    status: str
+    priority: TaskPriority
+    due_date: str
+    status: TaskStatus
 
 class CreateTaskRequest(BaseModel):
     title: str
-    priority: str = 'medium'
-    dueDate: str
+    priority: TaskPriority = 'medium'
+    due_date: str
 
 # Tasks are created at runtime only - they reset when the server restarts,
 # matching how the rest of this demo treats mutable state.
@@ -324,7 +329,7 @@ def create_task(request: CreateTaskRequest):
         "id": f"task-{uuid4().hex[:8]}",
         "title": request.title,
         "priority": request.priority,
-        "dueDate": request.dueDate,
+        "due_date": request.due_date,
         "status": "pending"
     }
     # Newest first, matching the order the tasks modal renders.
