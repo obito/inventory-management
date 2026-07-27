@@ -102,8 +102,8 @@ export default {
 
 <style scoped>
 .filters-bar {
-  background: #f8fafc;
-  border-bottom: 1px solid #e2e8f0;
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-border);
   padding: 0.75rem 0;
   position: sticky;
   top: 70px;
@@ -135,17 +135,18 @@ export default {
 .filter-group label {
   font-size: 0.75rem;
   font-weight: 600;
-  color: #64748b;
+  color: var(--color-text-secondary);
   white-space: nowrap;
 }
 
 .filter-select {
   padding: 0.4rem 0.75rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
+  border: 1px solid var(--color-border-hover);
+  border-radius: var(--radius-control);
   font-size: 0.813rem;
-  color: #0f172a;
-  background: white;
+  /* Sits on --color-panel (a panel-family surface), not --color-bg */
+  color: var(--color-panel-text-heading);
+  background: var(--color-panel);
   cursor: pointer;
   transition: all 0.2s;
   font-weight: 500;
@@ -153,13 +154,13 @@ export default {
 }
 
 .filter-select:hover {
-  border-color: #94a3b8;
+  border-color: var(--color-accent-hover);
 }
 
 .filter-select:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: var(--color-accent-hover);
+  box-shadow: 0 0 0 3px var(--color-accent-bg);
 }
 
 .reset-filters-btn {
@@ -167,19 +168,24 @@ export default {
   align-items: center;
   justify-content: center;
   padding: 0.4rem;
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  color: #64748b;
+  background: var(--color-panel);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  /* Sits on --color-panel (a panel-family surface), not --color-bg */
+  color: var(--color-panel-text-secondary);
   cursor: pointer;
   transition: all 0.2s;
   flex-shrink: 0;
 }
 
 .reset-filters-btn:hover:not(:disabled) {
-  background: #f8fafc;
-  border-color: #cbd5e1;
-  color: #0f172a;
+  background: var(--color-surface-hover);
+  border-color: var(--color-border-hover);
+  color: var(--color-panel-text-heading);
+}
+
+.reset-filters-btn:active:not(:disabled) {
+  transform: translateY(1px);
 }
 
 .reset-filters-btn:disabled {

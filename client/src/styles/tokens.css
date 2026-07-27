@@ -1,0 +1,215 @@
+/*
+ * Theme tokens.
+ *
+ * Light is the original SaaS palette (near-white bg/panels, blue accent).
+ * Retro Mission Control is an Apollo-era NASA console aesthetic: cream/
+ * parchment page background with dark navy instrument panels, burnt-orange
+ * accents, and hard-edged (no-blur) shadows.
+ *
+ * Retro's page bg and panel bg sit at opposite ends of the lightness scale
+ * (cream vs navy), unlike Light where they're nearly identical. Two
+ * additive tokens - --color-panel-text-heading and
+ * --color-panel-text-secondary - exist to give headings/labels rendered
+ * directly on panel/nav surfaces (e.g. .logo h1, .stat-value, .card-title,
+ * .stat-label, nav tabs) a value that's legible against navy, since the
+ * base --color-text-heading/--color-text-secondary tokens are tuned for
+ * text sitting on --color-bg instead. In Light these additive tokens are
+ * identical to their base counterparts, so nothing changes there.
+ */
+
+:root,
+[data-theme="light"] {
+  /* Surfaces */
+  --color-bg: #f8fafc;
+  --color-panel: #ffffff;
+  --color-nav-bg: #ffffff;
+  --color-surface-hover: #f1f5f9;
+  --color-bg-texture: none;
+
+  /* Additive: decorative gauge tick marks on the order-health donut (see
+   * Dashboard.vue .donut-gauge-ticks). Equal to --color-border in Light,
+   * where the ticks are hidden (opacity: 0) anyway, so this is a no-op. */
+  --chart-gauge-tick: var(--color-border);
+
+  /* Text */
+  --color-text: #1e293b;
+  --color-text-heading: #0f172a;
+  --color-text-secondary: #64748b;
+  --color-text-table-header: #475569;
+  --color-text-table: #334155;
+
+  /* Additive: text rendered directly on panel/nav surfaces (see header
+   * comment). Identical to the base heading/secondary tokens in Light. */
+  --color-panel-text-heading: #0f172a;
+  --color-panel-text-secondary: #64748b;
+
+  /* Borders */
+  --color-border: #e2e8f0;
+  --color-border-hover: #cbd5e1;
+  --color-border-subtle: #f1f5f9;
+
+  /* Accent */
+  --color-accent: #2563eb;
+  --color-accent-hover: #3b82f6;
+  --color-accent-bg: #eff6ff;
+
+  /* Stat card semantic values (text-only, no background) */
+  --color-stat-warning: #ea580c;
+  --color-stat-success: #059669;
+  --color-stat-danger: #dc2626;
+
+  /* Status badges (background + text pairs) */
+  --color-status-success-bg: #d1fae5;
+  --color-status-success-text: #065f46;
+  --color-status-warning-bg: #fed7aa;
+  --color-status-warning-text: #92400e;
+  --color-status-danger-bg: #fecaca;
+  --color-status-danger-text: #991b1b;
+  --color-status-info-bg: #dbeafe;
+  --color-status-info-text: #1e40af;
+  --color-status-stable-bg: #e0e7ff;
+  --color-status-stable-text: #3730a3;
+
+  /* Error / alert */
+  --color-error-bg: #fef2f2;
+  --color-error-border: #fecaca;
+  --color-error-text: #991b1b;
+
+  /* Radii */
+  --radius-panel: 10px;
+  --radius-control: 6px;
+  --radius-badge: 6px;
+  --radius-alert: 8px;
+
+  /* Shadows */
+  --shadow-nav: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.06);
+
+  /* Fonts */
+  --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  --font-mono: 'Courier New', monospace;
+
+  /* "Character" tokens - the bits that give a theme its personality (display
+   * typeface, mono readouts, panel shadows, rivets). Every one of these is a
+   * deliberate no-op in Light so the base look is untouched, which lets the
+   * same CSS rule serve both themes instead of duplicating selectors. */
+  --font-numeric: var(--font-body);
+  --display-transform: none;
+  --display-tracking: -0.025em;
+  /* Nav tabs need looser tracking than headings once they go condensed+caps */
+  --nav-tracking: normal;
+  --panel-shadow-static: none;
+  --rivet-color: transparent;
+  /* Section labels sit on --color-bg (the page), not on a panel. */
+  --color-section-label: #475569;
+
+  /* Corner rivets for instrument panels. Defined once here (not overridden
+   * per theme) because --rivet-color alone controls visibility: transparent
+   * in Light, visible in Retro. Applied as background-image so it never
+   * collides with ::before/::after already in use on some cards. */
+  --panel-rivets:
+    radial-gradient(circle at 7px 7px, var(--rivet-color) 1.5px, transparent 1.6px),
+    radial-gradient(circle at calc(100% - 7px) 7px, var(--rivet-color) 1.5px, transparent 1.6px),
+    radial-gradient(circle at 7px calc(100% - 7px), var(--rivet-color) 1.5px, transparent 1.6px),
+    radial-gradient(circle at calc(100% - 7px) calc(100% - 7px), var(--rivet-color) 1.5px, transparent 1.6px);
+}
+
+[data-theme="retro"] {
+  /* Apollo-era NASA console: cream/parchment page, dark navy instrument
+   * panels, burnt-orange accents. Hard-edged shadows, no blur/glow -
+   * deliberately not cyberpunk. */
+
+  /* Surfaces */
+  --color-bg: #f2e8d5;
+  --color-panel: #16274a;
+  --color-nav-bg: #12203c;
+  --color-surface-hover: #1d3157;
+  --color-bg-texture:
+    repeating-linear-gradient(0deg, rgba(22, 39, 74, 0.04) 0px, rgba(22, 39, 74, 0.04) 1px, transparent 1px, transparent 24px),
+    repeating-linear-gradient(90deg, rgba(22, 39, 74, 0.04) 0px, rgba(22, 39, 74, 0.04) 1px, transparent 1px, transparent 24px);
+
+  /* Additive: decorative gauge tick marks on the order-health donut (see
+   * Dashboard.vue .donut-gauge-ticks). A muted blue-grey that reads as
+   * mechanical dial markings against the navy panel. */
+  --chart-gauge-tick: #7f96b8;
+
+  /* Text (tuned for content sitting on --color-bg, i.e. cream) */
+  --color-text: #1c2b42;
+  --color-text-heading: #0f1f38;
+  --color-text-secondary: #5a6b85;
+  /* th/td: thead + tbody-hover surfaces are switched to navy-family
+   * (--color-surface-hover) in App.vue for Retro, so these need to read on
+   * navy, not cream - see App.vue thead/tbody tr:hover rules. */
+  --color-text-table-header: #9fb0cc;
+  --color-text-table: #c7cede;
+
+  /* Additive: text rendered directly on panel/nav surfaces (navy) */
+  --color-panel-text-heading: #f0e6d2;
+  --color-panel-text-secondary: #8fa0bf;
+
+  /* Borders */
+  --color-border: #35507c;
+  --color-border-hover: #4a6690;
+  --color-border-subtle: #22375c;
+
+  /* Accent. #d9793a rather than a deeper burnt orange because this is used for
+   * text on navy (active nav tab, toggle) where the darker tone landed at
+   * ~4.4:1 - just under AA. The darker --color-section-label handles the
+   * inverse case (orange on cream), where a light tone would fail instead. */
+  --color-accent: #d9793a;
+  --color-accent-hover: #a8481a;
+  --color-accent-bg: rgba(217, 121, 58, 0.2);
+
+  /* Stat card semantic values (text-only, no background, rendered on
+   * --color-panel navy) */
+  --color-stat-warning: #e0913f;
+  --color-stat-success: #4d9a6a;
+  --color-stat-danger: #c1554a;
+
+  /* Status badges (background + text pairs) - desaturated parchment tints */
+  --color-status-success-bg: #dbe8d4;
+  --color-status-success-text: #35502e;
+  --color-status-warning-bg: #f0dbb0;
+  --color-status-warning-text: #7a4a12;
+  --color-status-danger-bg: #ecd3ce;
+  --color-status-danger-text: #7a2e24;
+  --color-status-info-bg: #d7e0ec;
+  --color-status-info-text: #2c4566;
+  --color-status-stable-bg: #e0dae8;
+  --color-status-stable-text: #4a3866;
+
+  /* Error / alert */
+  --color-error-bg: #ecd3ce;
+  --color-error-border: #d9a89d;
+  --color-error-text: #7a2e24;
+
+  /* Radii: chunky/mechanical, not soft SaaS rounding */
+  --radius-panel: 3px;
+  --radius-control: 2px;
+  --radius-badge: 2px;
+  --radius-alert: 3px;
+
+  /* Shadows: hard-edged offset, no blur */
+  --shadow-nav: 2px 2px 0 rgba(15, 23, 33, 0.35);
+  --shadow-card: 3px 3px 0 rgba(15, 23, 33, 0.3);
+
+  /* Fonts */
+  --font-heading: 'Big Shoulders Display', 'Arial Narrow', sans-serif;
+  --font-body: 'Space Grotesk', 'Segoe UI', sans-serif;
+  --font-mono: 'Share Tech Mono', 'Courier New', monospace;
+
+  /* Character tokens - see the Light block for what these are for. This is
+   * where Retro earns its look: condensed console signage for headings,
+   * monospace instrument readouts for every number, hard-offset panel
+   * shadows, and corner rivets on the instrument panels. */
+  --font-numeric: 'Share Tech Mono', 'Courier New', monospace;
+  --display-transform: uppercase;
+  --display-tracking: 0.02em;
+  --nav-tracking: 0.06em;
+  --panel-shadow-static: 3px 3px 0 rgba(9, 17, 33, 0.45);
+  --rivet-color: rgba(127, 150, 184, 0.5);
+  /* Burnt orange on cream: #a8481a is the darker accent, which clears WCAG AA
+   * on --color-bg where the lighter --color-accent (#cc6a2e) would not. */
+  --color-section-label: #a8481a;
+}

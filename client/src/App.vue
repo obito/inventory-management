@@ -27,6 +27,7 @@
           </router-link>
         </nav>
         <LanguageSwitcher />
+        <ThemeToggle />
         <ProfileMenu
           @show-profile-details="showProfileDetails = true"
           @show-tasks="showTasks = true"
@@ -64,6 +65,7 @@ import ProfileMenu from './components/ProfileMenu.vue'
 import ProfileDetailsModal from './components/ProfileDetailsModal.vue'
 import TasksModal from './components/TasksModal.vue'
 import LanguageSwitcher from './components/LanguageSwitcher.vue'
+import ThemeToggle from './components/ThemeToggle.vue'
 
 export default {
   name: 'App',
@@ -72,7 +74,8 @@ export default {
     ProfileMenu,
     ProfileDetailsModal,
     TasksModal,
-    LanguageSwitcher
+    LanguageSwitcher,
+    ThemeToggle
   },
   setup() {
     const { currentUser } = useAuth()
@@ -169,9 +172,10 @@ export default {
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  background: #f8fafc;
-  color: #1e293b;
+  font-family: var(--font-body);
+  background-color: var(--color-bg);
+  background-image: var(--color-bg-texture);
+  color: var(--color-text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -183,9 +187,9 @@ body {
 }
 
 .top-nav {
-  background: #ffffff;
-  border-bottom: 1px solid #e2e8f0;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+  background: var(--color-nav-bg);
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: var(--shadow-nav);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -209,6 +213,10 @@ body {
   margin-right: 1rem;
 }
 
+.nav-container > .theme-toggle {
+  margin-right: 1rem;
+}
+
 .logo {
   display: flex;
   align-items: baseline;
@@ -216,18 +224,22 @@ body {
 }
 
 .logo h1 {
+  font-family: var(--font-heading);
   font-size: 1.375rem;
   font-weight: 700;
-  color: #0f172a;
-  letter-spacing: -0.025em;
+  /* Sits on --color-nav-bg (a panel-family surface), not --color-bg */
+  color: var(--color-panel-text-heading);
+  text-transform: var(--display-transform);
+  letter-spacing: var(--display-tracking);
 }
 
 .subtitle {
   font-size: 0.813rem;
-  color: #64748b;
+  /* Sits on --color-nav-bg (a panel-family surface), not --color-bg */
+  color: var(--color-panel-text-secondary);
   font-weight: 400;
   padding-left: 0.75rem;
-  border-left: 1px solid #e2e8f0;
+  border-left: 1px solid var(--color-border);
 }
 
 .nav-tabs {
@@ -236,24 +248,28 @@ body {
 }
 
 .nav-tabs a {
+  font-family: var(--font-heading);
   padding: 0.625rem 1.25rem;
-  color: #64748b;
+  /* Sits on --color-nav-bg (a panel-family surface), not --color-bg */
+  color: var(--color-panel-text-secondary);
   text-decoration: none;
   font-weight: 500;
   font-size: 0.938rem;
-  border-radius: 6px;
+  text-transform: var(--display-transform);
+  letter-spacing: var(--nav-tracking);
+  border-radius: var(--radius-control);
   transition: all 0.2s ease;
   position: relative;
 }
 
 .nav-tabs a:hover {
-  color: #0f172a;
-  background: #f1f5f9;
+  color: var(--color-panel-text-heading);
+  background: var(--color-surface-hover);
 }
 
 .nav-tabs a.active {
-  color: #2563eb;
-  background: #eff6ff;
+  color: var(--color-accent);
+  background: var(--color-accent-bg);
 }
 
 .nav-tabs a.active::after {
@@ -263,7 +279,7 @@ body {
   left: 0;
   right: 0;
   height: 2px;
-  background: #2563eb;
+  background: var(--color-accent);
 }
 
 .main-content {
@@ -279,15 +295,17 @@ body {
 }
 
 .page-header h2 {
+  font-family: var(--font-heading);
   font-size: 1.875rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--color-text-heading);
   margin-bottom: 0.375rem;
-  letter-spacing: -0.025em;
+  text-transform: var(--display-transform);
+  letter-spacing: var(--display-tracking);
 }
 
 .page-header p {
-  color: #64748b;
+  color: var(--color-text-secondary);
   font-size: 0.938rem;
 }
 
@@ -299,20 +317,25 @@ body {
 }
 
 .stat-card {
-  background: white;
+  background: var(--color-panel);
+  /* Must follow the `background` shorthand above, which resets background-image */
+  background-image: var(--panel-rivets);
   padding: 1.25rem;
-  border-radius: 10px;
-  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-panel);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--panel-shadow-static);
   transition: all 0.2s ease;
 }
 
 .stat-card:hover {
-  border-color: #cbd5e1;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  border-color: var(--color-border-hover);
+  box-shadow: var(--shadow-card);
 }
 
 .stat-label {
-  color: #64748b;
+  font-family: var(--font-heading);
+  /* Sits on --color-panel (a panel-family surface), not --color-bg */
+  color: var(--color-panel-text-secondary);
   font-size: 0.875rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -321,33 +344,39 @@ body {
 }
 
 .stat-value {
+  /* Numeric readout: monospace in Retro, unchanged body font in Light */
+  font-family: var(--font-numeric);
   font-size: 2.25rem;
   font-weight: 700;
-  color: #0f172a;
+  /* Sits on --color-panel (a panel-family surface), not --color-bg */
+  color: var(--color-panel-text-heading);
   letter-spacing: -0.025em;
 }
 
 .stat-card.warning .stat-value {
-  color: #ea580c;
+  color: var(--color-stat-warning);
 }
 
 .stat-card.success .stat-value {
-  color: #059669;
+  color: var(--color-stat-success);
 }
 
 .stat-card.danger .stat-value {
-  color: #dc2626;
+  color: var(--color-stat-danger);
 }
 
 .stat-card.info .stat-value {
-  color: #2563eb;
+  color: var(--color-accent);
 }
 
 .card {
-  background: white;
-  border-radius: 10px;
+  background: var(--color-panel);
+  /* Must follow the `background` shorthand above, which resets background-image */
+  background-image: var(--panel-rivets);
+  border-radius: var(--radius-panel);
   padding: 1.25rem;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border);
+  box-shadow: var(--panel-shadow-static);
   margin-bottom: 1.25rem;
 }
 
@@ -357,14 +386,17 @@ body {
   align-items: center;
   margin-bottom: 1rem;
   padding-bottom: 0.875rem;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .card-title {
+  font-family: var(--font-heading);
   font-size: 1.125rem;
   font-weight: 700;
-  color: #0f172a;
-  letter-spacing: -0.025em;
+  /* Sits on --color-panel (a panel-family surface), not --color-bg */
+  color: var(--color-panel-text-heading);
+  text-transform: var(--display-transform);
+  letter-spacing: var(--display-tracking);
 }
 
 .table-container {
@@ -377,16 +409,20 @@ table {
 }
 
 thead {
-  background: #f8fafc;
-  border-top: 1px solid #e2e8f0;
-  border-bottom: 1px solid #e2e8f0;
+  /* Tables always live inside .card (a panel-family surface). Use the
+   * panel-family hover surface here instead of --color-bg (the page
+   * background) so the header row reads as a shade of the panel rather
+   * than an unrelated page-background color showing through the card. */
+  background: var(--color-surface-hover);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
 }
 
 th {
   text-align: left;
   padding: 0.5rem 0.75rem;
   font-weight: 600;
-  color: #475569;
+  color: var(--color-text-table-header);
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -394,8 +430,8 @@ th {
 
 td {
   padding: 0.5rem 0.75rem;
-  border-top: 1px solid #f1f5f9;
-  color: #334155;
+  border-top: 1px solid var(--color-border-subtle);
+  color: var(--color-text-table);
   font-size: 0.875rem;
 }
 
@@ -404,13 +440,15 @@ tbody tr {
 }
 
 tbody tr:hover {
-  background: #f8fafc;
+  /* Same reasoning as thead above: stay within the panel-family surfaces
+   * so --color-text-table (tuned for panel backgrounds) stays legible. */
+  background: var(--color-surface-hover);
 }
 
 .badge {
   display: inline-block;
   padding: 0.313rem 0.75rem;
-  border-radius: 6px;
+  border-radius: var(--radius-badge);
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -418,68 +456,68 @@ tbody tr:hover {
 }
 
 .badge.success {
-  background: #d1fae5;
-  color: #065f46;
+  background: var(--color-status-success-bg);
+  color: var(--color-status-success-text);
 }
 
 .badge.warning {
-  background: #fed7aa;
-  color: #92400e;
+  background: var(--color-status-warning-bg);
+  color: var(--color-status-warning-text);
 }
 
 .badge.danger {
-  background: #fecaca;
-  color: #991b1b;
+  background: var(--color-status-danger-bg);
+  color: var(--color-status-danger-text);
 }
 
 .badge.info {
-  background: #dbeafe;
-  color: #1e40af;
+  background: var(--color-status-info-bg);
+  color: var(--color-status-info-text);
 }
 
 .badge.increasing {
-  background: #d1fae5;
-  color: #065f46;
+  background: var(--color-status-success-bg);
+  color: var(--color-status-success-text);
 }
 
 .badge.decreasing {
-  background: #fecaca;
-  color: #991b1b;
+  background: var(--color-status-danger-bg);
+  color: var(--color-status-danger-text);
 }
 
 .badge.stable {
-  background: #e0e7ff;
-  color: #3730a3;
+  background: var(--color-status-stable-bg);
+  color: var(--color-status-stable-text);
 }
 
 .badge.high {
-  background: #fecaca;
-  color: #991b1b;
+  background: var(--color-status-danger-bg);
+  color: var(--color-status-danger-text);
 }
 
 .badge.medium {
-  background: #fed7aa;
-  color: #92400e;
+  background: var(--color-status-warning-bg);
+  color: var(--color-status-warning-text);
 }
 
 .badge.low {
-  background: #dbeafe;
-  color: #1e40af;
+  background: var(--color-status-info-bg);
+  color: var(--color-status-info-text);
 }
 
 .loading {
   text-align: center;
   padding: 3rem;
-  color: #64748b;
+  color: var(--color-text-secondary);
   font-size: 0.938rem;
 }
 
 .error {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  color: #991b1b;
+  background: var(--color-error-bg);
+  border: 1px solid var(--color-error-border);
+  color: var(--color-error-text);
   padding: 1rem;
-  border-radius: 8px;
+  border-radius: var(--radius-alert);
   margin: 1rem 0;
   font-size: 0.938rem;
 }

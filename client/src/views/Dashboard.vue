@@ -85,19 +85,26 @@
               <!-- Left: Donut Chart -->
               <div class="order-health-chart">
                 <svg viewBox="0 0 200 200" class="donut-svg-compact">
-                  <circle cx="100" cy="100" r="65" fill="none" stroke="#e2e8f0" stroke-width="25"/>
-                  <circle cx="100" cy="100" r="65" fill="none" stroke="#10b981" stroke-width="25"
+                  <!-- Decorative gauge/dial tick ring: always present in the markup, but only
+                       rendered visible in Retro (see .donut-gauge-ticks CSS below). Purely
+                       cosmetic - does not affect the data-driven segments. -->
+                  <g class="donut-gauge-ticks">
+                    <line v-for="tick in gaugeTicks" :key="tick.angle"
+                      :x1="tick.x1" :y1="tick.y1" :x2="tick.x2" :y2="tick.y2"/>
+                  </g>
+                  <circle cx="100" cy="100" r="65" fill="none" style="stroke: var(--color-border)" stroke-width="25"/>
+                  <circle cx="100" cy="100" r="65" fill="none" class="donut-segment" style="stroke: var(--color-stat-success)" stroke-width="25"
                     :stroke-dasharray="`${getCircleSegment(statusData.delivered)} 408`"
                     stroke-dashoffset="0" transform="rotate(-90 100 100)"/>
-                  <circle cx="100" cy="100" r="65" fill="none" stroke="#3b82f6" stroke-width="25"
+                  <circle cx="100" cy="100" r="65" fill="none" class="donut-segment" style="stroke: var(--color-accent)" stroke-width="25"
                     :stroke-dasharray="`${getCircleSegment(statusData.shipped)} 408`"
                     :stroke-dashoffset="`-${getCircleSegment(statusData.delivered)}`"
                     transform="rotate(-90 100 100)"/>
-                  <circle cx="100" cy="100" r="65" fill="none" stroke="#f59e0b" stroke-width="25"
+                  <circle cx="100" cy="100" r="65" fill="none" class="donut-segment" style="stroke: var(--color-stat-warning)" stroke-width="25"
                     :stroke-dasharray="`${getCircleSegment(statusData.processing)} 408`"
                     :stroke-dashoffset="`-${getCircleSegment(statusData.delivered) + getCircleSegment(statusData.shipped)}`"
                     transform="rotate(-90 100 100)"/>
-                  <circle cx="100" cy="100" r="65" fill="none" stroke="#ef4444" stroke-width="25"
+                  <circle cx="100" cy="100" r="65" fill="none" class="donut-segment" style="stroke: var(--color-stat-danger)" stroke-width="25"
                     :stroke-dasharray="`${getCircleSegment(statusData.backordered)} 408`"
                     :stroke-dashoffset="`-${getCircleSegment(statusData.delivered) + getCircleSegment(statusData.shipped) + getCircleSegment(statusData.processing)}`"
                     transform="rotate(-90 100 100)"/>
@@ -105,10 +112,10 @@
                   <text x="100" y="120" text-anchor="middle" class="donut-center-value">{{ orderHealthMetrics.totalOrders }}</text>
                 </svg>
                 <div class="donut-legend-compact">
-                  <div class="legend-item-compact"><span class="legend-dot" style="background: #10b981"></span>{{ t('status.delivered') }}</div>
-                  <div class="legend-item-compact"><span class="legend-dot" style="background: #3b82f6"></span>{{ t('status.shipped') }}</div>
-                  <div class="legend-item-compact"><span class="legend-dot" style="background: #f59e0b"></span>{{ t('status.processing') }}</div>
-                  <div class="legend-item-compact"><span class="legend-dot" style="background: #ef4444"></span>{{ t('status.backordered') }}</div>
+                  <div class="legend-item-compact"><span class="legend-dot" style="background: var(--color-stat-success)"></span>{{ t('status.delivered') }}</div>
+                  <div class="legend-item-compact"><span class="legend-dot" style="background: var(--color-accent)"></span>{{ t('status.shipped') }}</div>
+                  <div class="legend-item-compact"><span class="legend-dot" style="background: var(--color-stat-warning)"></span>{{ t('status.processing') }}</div>
+                  <div class="legend-item-compact"><span class="legend-dot" style="background: var(--color-stat-danger)"></span>{{ t('status.backordered') }}</div>
                 </div>
               </div>
 
@@ -191,15 +198,15 @@
                   <td @click="showBacklogDetail(item)" style="cursor: pointer;"><strong>{{ item.order_id }}</strong></td>
                   <td @click="showBacklogDetail(item)" style="cursor: pointer;"><strong>{{ item.item_sku }}</strong></td>
                   <td @click="showBacklogDetail(item)" style="cursor: pointer;">{{ translateProductName(item.item_name) }}</td>
-                  <td @click="showBacklogDetail(item)" style="cursor: pointer;">{{ item.quantity_needed }}</td>
-                  <td @click="showBacklogDetail(item)" style="cursor: pointer;">{{ item.quantity_available }}</td>
+                  <td @click="showBacklogDetail(item)" style="cursor: pointer;" class="numeric">{{ item.quantity_needed }}</td>
+                  <td @click="showBacklogDetail(item)" style="cursor: pointer;" class="numeric">{{ item.quantity_available }}</td>
                   <td @click="showBacklogDetail(item)" style="cursor: pointer;">
                     <span class="badge danger">
                       {{ Math.abs(item.quantity_needed - item.quantity_available) }} {{ t('dashboard.inventoryShortages.unitsShort') }}
                     </span>
                   </td>
-                  <td @click="showBacklogDetail(item)" style="cursor: pointer;">
-                    <span :style="{ color: item.days_delayed > 7 ? '#ef4444' : '#f59e0b', fontWeight: 600 }">
+                  <td @click="showBacklogDetail(item)" style="cursor: pointer;" class="numeric">
+                    <span :style="{ color: item.days_delayed > 7 ? 'var(--color-stat-danger)' : 'var(--color-stat-warning)', fontWeight: 600 }">
                       {{ item.days_delayed }} {{ t('dashboard.inventoryShortages.days') }}
                     </span>
                   </td>
@@ -258,8 +265,8 @@
                   <td><strong>{{ translateProductName(item.name) }}</strong></td>
                   <td>{{ item.sku }}</td>
                   <td>{{ translateCategory(item.category) }}</td>
-                  <td>{{ item.unitsOrdered }}</td>
-                  <td><strong>{{ formatCurrency(item.revenue, selectedCurrency) }}</strong></td>
+                  <td class="numeric">{{ item.unitsOrdered }}</td>
+                  <td class="numeric"><strong>{{ formatCurrency(item.revenue, selectedCurrency) }}</strong></td>
                   <td>{{ formatDate(item.firstOrderDate) }}</td>
                   <td>
                     <span :class="['badge', getStockBadge(item.stockLevel)]">
@@ -409,7 +416,7 @@ export default {
       const categoryMap = {}
 
       // Use a single neutral slate/gray color for all categories
-      const singleColor = '#64748b' // Neutral slate gray color
+      const singleColor = 'var(--color-text-secondary)' // Neutral slate gray color
 
       // Get SKUs from orders in the filtered time period
       const orderedSkus = new Set()
@@ -595,6 +602,30 @@ export default {
       return totalOrders.value > 0 ? (value / totalOrders.value) * 440 : 0
     }
 
+    // Decorative gauge/dial tick marks ringing the order-health donut, evenly
+    // spaced every 15deg (with longer "major" ticks every 30deg), just outside
+    // the donut's outer edge (r=65 + strokeWidth/2=12.5 -> ~78). Purely
+    // cosmetic (Retro-only, see .donut-gauge-ticks CSS) - not derived from data.
+    const gaugeTicks = computed(() => {
+      const cx = 100
+      const cy = 100
+      const outerR = 80
+      const ticks = []
+      for (let angle = 0; angle < 360; angle += 15) {
+        const isMajor = angle % 30 === 0
+        const innerR = isMajor ? outerR - 8 : outerR - 5
+        const rad = ((angle - 90) * Math.PI) / 180
+        ticks.push({
+          angle,
+          x1: cx + innerR * Math.cos(rad),
+          y1: cy + innerR * Math.sin(rad),
+          x2: cx + outerR * Math.cos(rad),
+          y2: cy + outerR * Math.sin(rad)
+        })
+      }
+      return ticks
+    })
+
     const getStockBadge = (level) => {
       if (level === 'In Stock') return 'success'
       if (level === 'Low Stock') return 'warning'
@@ -696,6 +727,7 @@ export default {
       backlogItems,
       calculatePercentage,
       getCircleSegment,
+      gaugeTicks,
       getStockBadge,
       translateCategory,
       translateStockLevel,
@@ -727,6 +759,10 @@ export default {
 </script>
 
 <style scoped>
+.numeric {
+  font-family: var(--font-numeric);
+}
+
 .page-header {
   display: flex;
   justify-content: space-between;
@@ -736,7 +772,7 @@ export default {
 
 .header-meta {
   font-size: 0.813rem;
-  color: #64748b;
+  color: var(--color-text-secondary);
 }
 
 .kpi-section {
@@ -744,9 +780,12 @@ export default {
 }
 
 .section-title {
+  font-family: var(--font-heading);
   font-size: 1rem;
   font-weight: 600;
-  color: #475569;
+  /* Sits directly on --color-bg (the page), so it needs a page-tuned color -
+   * the previous panel/table token was navy-tuned and washed out on cream. */
+  color: var(--color-section-label);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 1rem;
@@ -759,9 +798,12 @@ export default {
 }
 
 .kpi-card {
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
+  background: var(--color-panel);
+  /* Must follow the `background` shorthand above, which resets background-image */
+  background-image: var(--panel-rivets);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-panel);
+  box-shadow: var(--panel-shadow-static);
   padding: 1rem;
 }
 
@@ -770,44 +812,47 @@ export default {
 }
 
 .kpi-label {
+  font-family: var(--font-heading);
   font-size: 0.813rem;
   font-weight: 600;
-  color: #64748b;
+  color: var(--color-panel-text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.025em;
 }
 
 .kpi-value {
+  /* Numeric readout: monospace in Retro, unchanged body font in Light */
+  font-family: var(--font-numeric);
   font-size: 2rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--color-panel-text-heading);
   margin-bottom: 0.5rem;
   letter-spacing: -0.025em;
 }
 
 .kpi-goal {
   font-size: 0.813rem;
-  color: #64748b;
+  color: var(--color-panel-text-secondary);
   margin-bottom: 0.75rem;
 }
 
 .kpi-progress-bar {
   width: 100%;
   height: 6px;
-  background: #f1f5f9;
+  background: var(--color-surface-hover);
   border-radius: 3px;
   overflow: hidden;
 }
 
 .kpi-progress {
   height: 100%;
-  background: #3b82f6;
+  background: var(--color-accent);
   border-radius: 3px;
   transition: width 0.6s ease;
 }
 
 .kpi-progress.success {
-  background: #10b981;
+  background: var(--color-stat-success);
 }
 
 .charts-grid {
@@ -823,6 +868,38 @@ export default {
 
 .chart-content {
   padding: 1rem;
+  /* Technical-schematic/graph-paper surface. --color-bg-texture is `none` in
+     Light (no-op) and a subtle navy-on-navy grid in Retro, giving the chart
+     card an instrument-panel readout feel instead of a flat surface. */
+  background-image: var(--color-bg-texture);
+}
+
+/* Decorative gauge/dial tick ring around the order-health donut. Hidden in
+   Light (soft SaaS donut, no dial framing); visible in Retro (Apollo console
+   dial face). Ticks are generated in the `gaugeTicks` computed property. */
+.donut-gauge-ticks line {
+  stroke: var(--chart-gauge-tick);
+  stroke-width: 1.5;
+}
+
+[data-theme="light"] .donut-gauge-ticks {
+  opacity: 0;
+}
+
+[data-theme="retro"] .donut-gauge-ticks {
+  opacity: 1;
+}
+
+/* Segment cap style: Light reads as a soft SaaS donut (rounded ends); Retro
+   reads as a mechanical dial (squared-off ends). Enum-like SVG properties
+   don't respond reliably to CSS vars, so this is a class + selector, not a
+   token. */
+.donut-segment {
+  stroke-linecap: round;
+}
+
+[data-theme="retro"] .donut-segment {
+  stroke-linecap: butt;
 }
 
 .donut-chart {
@@ -848,7 +925,7 @@ export default {
   align-items: center;
   gap: 0.625rem;
   font-size: 0.875rem;
-  color: #475569;
+  color: var(--color-panel-text-secondary);
 }
 
 .legend-dot {
@@ -883,7 +960,7 @@ export default {
 
 .donut-center-label {
   font-size: 12px;
-  fill: #64748b;
+  fill: var(--color-panel-text-secondary);
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -891,7 +968,7 @@ export default {
 
 .donut-center-value {
   font-size: 36px;
-  fill: #0f172a;
+  fill: var(--color-panel-text-heading);
   font-weight: 700;
 }
 
@@ -906,7 +983,7 @@ export default {
   align-items: center;
   gap: 0.5rem;
   font-size: 0.875rem;
-  color: #475569;
+  color: var(--color-panel-text-secondary);
   font-weight: 500;
 }
 
@@ -928,7 +1005,7 @@ export default {
 
 .health-metric-label {
   font-size: 0.688rem;
-  color: #64748b;
+  color: var(--color-panel-text-secondary);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -937,20 +1014,20 @@ export default {
 .health-metric-value {
   font-size: 1.75rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--color-panel-text-heading);
   letter-spacing: -0.025em;
 }
 
 .metric-good {
-  color: #10b981;
+  color: var(--color-stat-success);
 }
 
 .metric-warning {
-  color: #f59e0b;
+  color: var(--color-stat-warning);
 }
 
 .metric-bad {
-  color: #ef4444;
+  color: var(--color-stat-danger);
 }
 
 .horizontal-bar-chart {
@@ -971,14 +1048,14 @@ export default {
   min-width: 120px;
   font-size: 0.875rem;
   font-weight: 600;
-  color: #475569;
+  color: var(--color-panel-text-secondary);
   flex-shrink: 0;
 }
 
 .h-bar-container {
   flex: 1;
   height: 32px;
-  background: #f8fafc;
+  background: var(--color-surface-hover);
   border-radius: 6px;
   overflow: hidden;
 }
@@ -1010,8 +1087,8 @@ export default {
   justify-content: space-between;
   padding-right: 1rem;
   font-size: 0.75rem;
-  color: #94a3b8;
-  border-right: 1px solid #e2e8f0;
+  color: var(--color-text-secondary);
+  border-right: 1px solid var(--color-border);
 }
 
 .line-chart-area {
@@ -1044,7 +1121,7 @@ export default {
   width: 100%;
   max-width: 60px;
   min-height: 8px;
-  background: #3b82f6;
+  background: var(--color-accent-hover);
   border-radius: 6px 6px 0 0;
   transition: all 0.3s ease;
   cursor: pointer;
@@ -1052,32 +1129,32 @@ export default {
 }
 
 .line-bar.empty-bar {
-  background: #e2e8f0;
+  background: var(--color-border);
   box-shadow: none;
   min-height: 4px;
 }
 
 .line-bar:hover {
-  background: #2563eb;
+  background: var(--color-accent);
   transform: scaleY(1.05);
 }
 
 .line-bar.empty-bar:hover {
-  background: #cbd5e1;
+  background: var(--color-border-hover);
   transform: none;
 }
 
 .line-bar-label {
   font-size: 0.75rem;
   font-weight: 600;
-  color: #64748b;
+  color: var(--color-panel-text-secondary);
   white-space: nowrap;
 }
 
 .no-data {
   padding: 2rem;
   text-align: center;
-  color: #94a3b8;
+  color: var(--color-panel-text-secondary);
   font-size: 0.875rem;
 }
 
@@ -1093,12 +1170,12 @@ export default {
 .success-icon {
   width: 48px;
   height: 48px;
-  color: #10b981;
+  color: var(--color-stat-success);
 }
 
 .no-backlog-text {
   font-size: 1.125rem;
-  color: #10b981;
+  color: var(--color-stat-success);
   font-weight: 600;
   margin: 0;
 }
@@ -1109,7 +1186,7 @@ export default {
 }
 
 .clickable-row:hover {
-  background: #eff6ff !important;
+  background: var(--color-accent-bg) !important;
 }
 
 /* Tasks Card Styles */
@@ -1130,7 +1207,7 @@ export default {
 .task-input {
   flex: 1;
   padding: 0.75rem;
-  border: 2px solid #e2e8f0;
+  border: 2px solid var(--color-border);
   border-radius: 8px;
   font-size: 0.95rem;
   transition: border-color 0.2s ease;
@@ -1138,12 +1215,12 @@ export default {
 
 .task-input:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: var(--color-accent);
 }
 
 .task-add-btn {
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--color-accent-hover) 0%, var(--color-accent) 100%);
   color: white;
   border: none;
   border-radius: 8px;
@@ -1164,7 +1241,7 @@ export default {
 .no-tasks {
   text-align: center;
   padding: 2rem;
-  color: #64748b;
+  color: var(--color-text-secondary);
   font-style: italic;
 }
 
@@ -1179,15 +1256,15 @@ export default {
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem;
-  background: #f8fafc;
+  background: var(--color-surface-hover);
   border-radius: 8px;
   border: 2px solid transparent;
   transition: all 0.2s ease;
 }
 
 .task-item:hover {
-  border-color: #e2e8f0;
-  background: white;
+  border-color: var(--color-border);
+  background: var(--color-panel);
 }
 
 .task-item.completed {
@@ -1196,28 +1273,28 @@ export default {
 
 .task-item.completed .task-text {
   text-decoration: line-through;
-  color: #94a3b8;
+  color: var(--color-text-secondary);
 }
 
 .task-checkbox {
   width: 20px;
   height: 20px;
   cursor: pointer;
-  accent-color: #667eea;
+  accent-color: var(--color-accent);
 }
 
 .task-text {
   flex: 1;
   cursor: pointer;
   user-select: none;
-  color: #0f172a;
+  color: var(--color-text-heading);
   font-size: 0.95rem;
 }
 
 .task-delete-btn {
   width: 28px;
   height: 28px;
-  background: #ef4444;
+  background: var(--color-stat-danger);
   color: white;
   border: none;
   border-radius: 6px;
@@ -1232,14 +1309,14 @@ export default {
 }
 
 .task-delete-btn:hover {
-  background: #dc2626;
+  background: var(--color-stat-danger);
   transform: scale(1.1);
 }
 
 .po-button {
   padding: 0.5rem 1rem;
   border: none;
-  border-radius: 6px;
+  border-radius: var(--radius-control);
   font-size: 0.813rem;
   font-weight: 600;
   cursor: pointer;
@@ -1247,24 +1324,28 @@ export default {
   white-space: nowrap;
 }
 
+.po-button:active {
+  transform: translateY(1px);
+}
+
 .po-button.create {
-  background: #3b82f6;
+  background: var(--color-accent-hover);
   color: white;
 }
 
 .po-button.create:hover {
-  background: #2563eb;
+  background: var(--color-accent);
   transform: translateY(-1px);
   box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
 }
 
 .po-button.view {
-  background: #64748b;
+  background: var(--color-text-secondary);
   color: white;
 }
 
 .po-button.view:hover {
-  background: #475569;
+  background: var(--color-text-table-header);
   transform: translateY(-1px);
   box-shadow: 0 2px 4px rgba(100, 116, 139, 0.3);
 }
