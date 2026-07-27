@@ -40,7 +40,10 @@ jobs:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           plugin_marketplaces: 'https://github.com/anthropics/claude-code.git'
           plugins: 'code-review@claude-code-plugins'
-          prompt: '/code-review:code-review ${{ github.repository }}/pull/${{ github.event.pull_request.number }}'
+          # --comment is what makes the review reach GitHub. Without it the command
+          # produces a terminal-only summary and the job still exits 0, so the PR
+          # shows a green check and no review.
+          prompt: '/code-review:code-review --comment ${{ github.repository }}/pull/${{ github.event.pull_request.number }}'
           # Surface the agent's report in the job summary and log. Without these,
           # a run that reviews nothing is indistinguishable from a clean review:
           # both just show a green check and "No buffered inline comments".
