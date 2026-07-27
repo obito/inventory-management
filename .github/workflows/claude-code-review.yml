@@ -49,6 +49,12 @@ jobs:
           # both just show a green check and "No buffered inline comments".
           display_report: true
           show_full_output: true
+          # The review is posted with mcp__github__create_pull_request_review, which
+          # is not permitted by default: the agent completes the whole review, then
+          # stops at "I need explicit permission before I can post this comment".
+          # Both tools below only write to the PR, which pull-requests: write above
+          # already authorises.
+          claude_args: '--allowedTools mcp__github__create_pull_request_review,mcp__github__add_issue_comment'
           # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
           # or https://code.claude.com/docs/en/cli-reference for available options
 
