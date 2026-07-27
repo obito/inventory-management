@@ -47,14 +47,14 @@
                   <label for="task-due-date">{{ t('tasks.dueDate') }}</label>
                   <input
                     id="task-due-date"
-                    v-model="newTask.dueDate"
+                    v-model="newTask.due_date"
                     type="date"
                     class="task-input"
                   />
                 </div>
 
                 <div class="form-group-btn">
-                  <button @click="handleAddTask" class="task-add-btn" :disabled="!newTask.title.trim() || !newTask.dueDate">
+                  <button @click="handleAddTask" class="task-add-btn" :disabled="!newTask.title.trim() || !newTask.due_date">
                     {{ t('tasks.addTask') }}
                   </button>
                 </div>
@@ -99,10 +99,10 @@
                       <rect x="2" y="3" width="10" height="9" rx="1" stroke="currentColor" stroke-width="1.2"/>
                       <path d="M4.5 1.5V4.5M9.5 1.5V4.5M2 6H12" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
                     </svg>
-                    {{ formatDueDate(task.dueDate) }}
+                    {{ formatDueDate(task.due_date) }}
                   </div>
-                  <span class="status-badge" :class="getStatusClass(task.dueDate, task.status)">
-                    {{ getStatusText(task.dueDate, task.status) }}
+                  <span class="status-badge" :class="getStatusClass(task.due_date, task.status)">
+                    {{ getStatusText(task.due_date, task.status) }}
                   </span>
                 </div>
               </div>
@@ -140,7 +140,7 @@ export default {
     const newTask = ref({
       title: '',
       priority: 'medium',
-      dueDate: ''
+      due_date: ''
     })
 
     const sortedTasks = computed(() => {
@@ -153,16 +153,16 @@ export default {
     }
 
     const handleAddTask = () => {
-      if (newTask.value.title.trim() && newTask.value.dueDate) {
+      if (newTask.value.title.trim() && newTask.value.due_date) {
         emit('add-task', {
           title: newTask.value.title.trim(),
           priority: newTask.value.priority,
-          dueDate: newTask.value.dueDate
+          due_date: newTask.value.due_date
         })
         newTask.value = {
           title: '',
           priority: 'medium',
-          dueDate: ''
+          due_date: ''
         }
       }
     }

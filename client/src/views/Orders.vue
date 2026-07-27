@@ -113,7 +113,7 @@
                 </td>
                 <td class="col-date">{{ formatDate(order.order_date) }}</td>
                 <td class="col-date">{{ formatDate(order.expected_delivery) }}</td>
-                <td class="col-value"><strong>{{ currencySymbol }}{{ order.total_value.toLocaleString() }}</strong></td>
+                <td class="col-value"><strong>{{ formatMoney(order.total_value) }}</strong></td>
               </tr>
             </tbody>
           </table>
@@ -128,6 +128,7 @@ import { ref, onMounted, watch, computed } from 'vue'
 import { api } from '../api'
 import { useFilters } from '../composables/useFilters'
 import { useI18n } from '../composables/useI18n'
+import { formatCurrency } from '../utils/currency'
 
 export default {
   name: 'Orders',
@@ -137,6 +138,8 @@ export default {
     const currencySymbol = computed(() => {
       return currentCurrency.value === 'JPY' ? '¥' : '$'
     })
+
+    const formatMoney = (value) => formatCurrency(value, currentCurrency.value)
     const loading = ref(true)
     const error = ref(null)
     const orders = ref([])
@@ -224,6 +227,7 @@ export default {
       getOrderStatusClass,
       formatDate,
       currencySymbol,
+      formatMoney,
       translateProductName,
       translateCustomerName
     }

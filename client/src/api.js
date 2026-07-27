@@ -1,14 +1,27 @@
 import axios from 'axios'
 
-const API_BASE_URL = 'http://localhost:8001/api'
+// Overridable so the app can run against a backend on a non-default port
+// (e.g. several git worktrees served side by side). Defaults to the standard port.
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8001/api'
+
+// Serializes the global filters, dropping any set to 'all'. `fields` limits which
+// filters an endpoint accepts - inventory has no time or status dimension.
+function buildFilterParams(filters = {}, fields = ['warehouse', 'category', 'status', 'month']) {
+  const params = new URLSearchParams()
+  for (const field of fields) {
+    if (filters[field] && filters[field] !== 'all') params.append(field, filters[field])
+  }
+  return params.toString()
+}
+
+// Reports are inherently multi-month: a month filter collapses the trend chart to
+// one bar and leaves every month-over-month cell with nothing to diff against.
+// Spending's chart endpoints omit it for the same reason.
+const REPORT_FILTER_FIELDS = ['warehouse', 'category', 'status']
 
 export const api = {
   async getInventory(filters = {}) {
-    const params = new URLSearchParams()
-    if (filters.warehouse && filters.warehouse !== 'all') params.append('warehouse', filters.warehouse)
-    if (filters.category && filters.category !== 'all') params.append('category', filters.category)
-
-    const response = await axios.get(`${API_BASE_URL}/inventory?${params.toString()}`)
+    const response = await axios.get(`${API_BASE_URL}/inventory?${buildFilterParams(filters, ['warehouse', 'category'])}`)
     return response.data
   },
 
@@ -18,13 +31,7 @@ export const api = {
   },
 
   async getOrders(filters = {}) {
-    const params = new URLSearchParams()
-    if (filters.warehouse && filters.warehouse !== 'all') params.append('warehouse', filters.warehouse)
-    if (filters.category && filters.category !== 'all') params.append('category', filters.category)
-    if (filters.status && filters.status !== 'all') params.append('status', filters.status)
-    if (filters.month && filters.month !== 'all') params.append('month', filters.month)
-
-    const response = await axios.get(`${API_BASE_URL}/orders?${params.toString()}`)
+    const response = await axios.get(`${API_BASE_URL}/orders?${buildFilterParams(filters)}`)
     return response.data
   },
 
@@ -44,13 +51,7 @@ export const api = {
   },
 
   async getDashboardSummary(filters = {}) {
-    const params = new URLSearchParams()
-    if (filters.warehouse && filters.warehouse !== 'all') params.append('warehouse', filters.warehouse)
-    if (filters.category && filters.category !== 'all') params.append('category', filters.category)
-    if (filters.status && filters.status !== 'all') params.append('status', filters.status)
-    if (filters.month && filters.month !== 'all') params.append('month', filters.month)
-
-    const response = await axios.get(`${API_BASE_URL}/dashboard/summary?${params.toString()}`)
+    const response = await axios.get(`${API_BASE_URL}/dashboard/summary?${buildFilterParams(filters)}`)
     return response.data
   },
 
@@ -71,6 +72,16 @@ export const api = {
 
   async getTransactions() {
     const response = await axios.get(`${API_BASE_URL}/spending/transactions`)
+    return response.data
+  },
+
+  async getQuarterlyReports(filters = {}) {
+    const response = await axios.get(`${API_BASE_URL}/reports/quarterly?${buildFilterParams(filters, REPORT_FILTER_FIELDS)}`)
+    return response.data
+  },
+
+  async getMonthlyTrends(filters = {}) {
+    const response = await axios.get(`${API_BASE_URL}/reports/monthly-trends?${buildFilterParams(filters, REPORT_FILTER_FIELDS)}`)
     return response.data
   },
 

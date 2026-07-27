@@ -6,6 +6,8 @@ export default {
     orders: '注文',
     finance: '財務',
     demandForecast: '需要予測',
+    reports: 'レポート',
+    backlog: 'バックログ',
     restocking: '補充',
     companyName: '触媒コンポーネンツ',
     subtitle: '在庫管理システム'
@@ -202,6 +204,92 @@ export default {
     }
   },
 
+  // Performance Reports
+  reports: {
+    title: '業績レポート',
+    description: '四半期の業績指標と月次推移を表示',
+    loading: 'レポートを読み込み中...',
+    loadError: 'レポートの読み込みに失敗しました',
+    timePeriodNote: '期間フィルターはこのページには適用されません。四半期および月次ビューは常に通年を表示します。',
+    quarterly: {
+      title: '四半期業績',
+      quarter: '四半期',
+      totalOrders: '注文総数',
+      totalRevenue: '総収益',
+      avgOrderValue: '平均注文額',
+      fulfillmentRate: '履行率'
+    },
+    monthlyTrend: {
+      title: '月次収益推移'
+    },
+    monthOverMonth: {
+      title: '前月比分析',
+      month: '月',
+      orders: '注文数',
+      revenue: '収益',
+      change: '増減',
+      growthRate: '成長率'
+    },
+    summary: {
+      totalRevenueYTD: '総収益（年初来）',
+      avgMonthlyRevenue: '平均月次収益',
+      totalOrdersYTD: '注文総数（年初来）',
+      bestQuarter: '最高業績の四半期'
+    },
+    noData: '選択されたフィルターに該当するレポートデータがありません'
+  },
+
+  // Backlog
+  backlog: {
+    title: 'バックログ管理',
+    description: '在庫不足の追跡と解消',
+    loading: 'バックログを読み込み中...',
+    loadError: 'バックログの読み込みに失敗しました',
+    highPriority: '優先度：高',
+    mediumPriority: '優先度：中',
+    lowPriority: '優先度：低',
+    totalItems: 'バックログ総件数',
+    itemsTitle: 'バックログ項目',
+    noItems: 'バックログはありません - すべての注文を履行できます！',
+    unitsShort: '個不足',
+    days: '日',
+    table: {
+      orderId: '注文ID',
+      sku: 'SKU',
+      itemName: '品目名',
+      quantityNeeded: '必要数量',
+      quantityAvailable: '利用可能数量',
+      shortage: '不足',
+      daysDelayed: '遅延日数',
+      priority: '優先度'
+    }
+  },
+
+  // Purchase Orders
+  purchaseOrder: {
+    createPO: '発注書作成',
+    viewPO: '発注書を表示',
+    createTitle: '発注書の作成',
+    viewTitle: '発注書の詳細',
+    item: '品目',
+    shortage: '不足',
+    supplierName: '仕入先名',
+    supplierPlaceholder: '仕入先名を入力...',
+    quantity: '数量',
+    unitCost: '単価',
+    expectedDelivery: '納品予定日',
+    notes: '備考',
+    notesPlaceholder: 'この発注に関する備考（任意）...',
+    totalCost: '合計金額',
+    poNumber: '発注番号',
+    status: 'ステータス',
+    createdDate: '作成日',
+    create: '発注書を作成',
+    creating: '作成中...',
+    createError: '発注書の作成に失敗しました',
+    loadError: '発注書の読み込みに失敗しました'
+  },
+
   // Restocking
   restocking: {
     title: '補充',
@@ -232,6 +320,7 @@ export default {
     category: 'カテゴリ',
     orderStatus: '注文ステータス',
     all: 'すべて',
+    resetAll: 'すべてのフィルターをリセット',
     allMonths: 'すべての月'
   },
 
@@ -360,6 +449,7 @@ export default {
     search: '検索',
     filter: 'フィルター',
     export: 'エクスポート',
+    actions: '操作',
     items: '件'
   },
 
