@@ -139,9 +139,10 @@ const formatDate = (dateString) => {
 }
 
 .modal-container {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+  background: var(--color-panel);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-panel);
+  box-shadow: var(--shadow-card);
   max-width: 700px;
   width: 100%;
   max-height: 90vh;
@@ -155,32 +156,36 @@ const formatDate = (dateString) => {
   align-items: center;
   justify-content: space-between;
   padding: 1.5rem;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .modal-title {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--color-panel-text-heading);
   letter-spacing: -0.025em;
 }
 
 .close-button {
   background: none;
   border: none;
-  color: #64748b;
+  color: var(--color-panel-text-secondary);
   cursor: pointer;
   padding: 0.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 6px;
+  border-radius: var(--radius-control);
   transition: all 0.15s ease;
 }
 
 .close-button:hover {
-  background: #f1f5f9;
-  color: #0f172a;
+  background: var(--color-surface-hover);
+  color: var(--color-panel-text-heading);
+}
+
+.close-button:active {
+  transform: translateY(1px);
 }
 
 .modal-body {
@@ -194,15 +199,15 @@ const formatDate = (dateString) => {
   align-items: center;
   gap: 1.25rem;
   padding-bottom: 1.5rem;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--color-border);
   margin-bottom: 1.5rem;
 }
 
 .shortage-icon {
   width: 64px;
   height: 64px;
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-  border-radius: 12px;
+  background: var(--color-stat-danger);
+  border-radius: var(--radius-panel);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -218,39 +223,54 @@ const formatDate = (dateString) => {
 .item-name {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--color-panel-text-heading);
   margin: 0 0 0.5rem 0;
 }
 
 .item-sku {
   font-size: 0.875rem;
-  color: #64748b;
-  font-family: 'Monaco', 'Courier New', monospace;
+  color: var(--color-panel-text-secondary);
+  font-family: var(--font-mono);
 }
 
 .priority-badge {
   padding: 0.5rem 1rem;
-  border-radius: 6px;
+  border-radius: var(--radius-control);
   font-size: 0.875rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.025em;
   flex-shrink: 0;
+  position: relative;
+  padding-left: 2rem;
+}
+
+.priority-badge::before {
+  content: '';
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  transform: translateY(-50%);
+  background: currentColor;
+  box-shadow: 0 0 0 1px currentColor;
 }
 
 .priority-badge.high {
-  background: #fecaca;
-  color: #991b1b;
+  background: var(--color-status-danger-bg);
+  color: var(--color-status-danger-text);
 }
 
 .priority-badge.medium {
-  background: #fed7aa;
-  color: #92400e;
+  background: var(--color-status-warning-bg);
+  color: var(--color-status-warning-text);
 }
 
 .priority-badge.low {
-  background: #dbeafe;
-  color: #1e40af;
+  background: var(--color-status-info-bg);
+  color: var(--color-status-info-text);
 }
 
 .shortage-summary {
@@ -262,18 +282,18 @@ const formatDate = (dateString) => {
 
 .summary-card {
   padding: 1.25rem;
-  border-radius: 10px;
+  border-radius: var(--radius-panel);
   border: 2px solid;
 }
 
 .summary-card.danger {
-  border-color: #fecaca;
-  background: #fef2f2;
+  border-color: var(--color-status-danger-bg);
+  background: var(--color-error-bg);
 }
 
 .summary-card.warning {
-  border-color: #fed7aa;
-  background: #fffbeb;
+  border-color: var(--color-status-warning-bg);
+  background: var(--color-status-warning-bg);
 }
 
 .summary-label {
@@ -281,22 +301,22 @@ const formatDate = (dateString) => {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #64748b;
+  color: var(--color-panel-text-secondary);
   margin-bottom: 0.5rem;
 }
 
 .summary-value {
   font-size: 1.875rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--color-panel-text-heading);
 }
 
 .summary-card.danger .summary-value {
-  color: #dc2626;
+  color: var(--color-stat-danger);
 }
 
 .summary-card.warning .summary-value {
-  color: #f59e0b;
+  color: var(--color-stat-warning);
 }
 
 .info-grid {
@@ -316,24 +336,24 @@ const formatDate = (dateString) => {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #64748b;
+  color: var(--color-panel-text-secondary);
 }
 
 .info-value {
   font-size: 0.938rem;
-  color: #0f172a;
+  color: var(--color-panel-text-heading);
   font-weight: 500;
 }
 
 .info-value.order-id,
 .info-value.sku {
-  font-family: 'Monaco', 'Courier New', monospace;
-  color: #2563eb;
+  font-family: var(--font-mono);
+  color: var(--color-accent);
 }
 
 .modal-footer {
   padding: 1.5rem;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid var(--color-border);
   display: flex;
   justify-content: flex-end;
   gap: 0.75rem;
@@ -341,20 +361,24 @@ const formatDate = (dateString) => {
 
 .btn-secondary {
   padding: 0.625rem 1.25rem;
-  background: #f1f5f9;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
+  background: var(--color-surface-hover);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
   font-weight: 500;
   font-size: 0.875rem;
-  color: #334155;
+  color: var(--color-text-table);
   cursor: pointer;
   transition: all 0.15s ease;
   font-family: inherit;
 }
 
 .btn-secondary:hover {
-  background: #e2e8f0;
-  border-color: #cbd5e1;
+  background: var(--color-border);
+  border-color: var(--color-border-hover);
+}
+
+.btn-secondary:active {
+  transform: translateY(1px);
 }
 
 /* Modal transition animations */

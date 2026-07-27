@@ -58,10 +58,10 @@
                 <td><strong>{{ item.sku }}</strong></td>
                 <td>{{ translateProductName(item.name) }}</td>
                 <td>{{ translateCategory(item.category) }}</td>
-                <td><strong>{{ item.quantity_on_hand }}</strong></td>
-                <td>{{ item.reorder_point }}</td>
-                <td>{{ currencySymbol }}{{ item.unit_cost.toFixed(2) }}</td>
-                <td><strong>{{ currencySymbol }}{{ (item.quantity_on_hand * item.unit_cost).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) }}</strong></td>
+                <td class="numeric"><strong>{{ item.quantity_on_hand }}</strong></td>
+                <td class="numeric">{{ item.reorder_point }}</td>
+                <td class="numeric">{{ currencySymbol }}{{ item.unit_cost.toFixed(2) }}</td>
+                <td class="numeric"><strong>{{ currencySymbol }}{{ (item.quantity_on_hand * item.unit_cost).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) }}</strong></td>
                 <td>{{ translateWarehouse(item.location) }}</td>
                 <td>
                   <span :class="['badge', getStockStatusClass(item)]">
@@ -225,6 +225,10 @@ export default {
 </script>
 
 <style scoped>
+.numeric {
+  font-family: var(--font-mono);
+}
+
 .page-header {
   margin-bottom: 1.5rem;
 }
@@ -234,7 +238,7 @@ export default {
 }
 
 .page-header p {
-  color: #64748b;
+  color: var(--color-text-secondary);
   font-size: 0.875rem;
 }
 
@@ -244,13 +248,13 @@ export default {
   align-items: center;
   gap: 1.5rem;
   padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .card-title {
   font-size: 1rem;
   font-weight: 600;
-  color: #0f172a;
+  color: var(--color-panel-text-heading);
   margin: 0;
 }
 
@@ -266,30 +270,30 @@ export default {
   left: 0.75rem;
   width: 18px;
   height: 18px;
-  color: #94a3b8;
+  color: var(--color-panel-text-secondary);
   pointer-events: none;
 }
 
 .search-input {
   width: 100%;
   padding: 0.5rem 2.5rem 0.5rem 2.5rem;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--color-border-hover);
   border-radius: 8px;
   font-size: 0.875rem;
-  color: #0f172a;
-  background: #f8fafc;
+  color: var(--color-panel-text-heading);
+  background: var(--color-surface-hover);
   transition: all 0.2s;
 }
 
 .search-input:focus {
   outline: none;
-  border-color: #3b82f6;
+  border-color: var(--color-accent);
   background: white;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .search-input::placeholder {
-  color: #94a3b8;
+  color: var(--color-panel-text-secondary);
 }
 
 .clear-search {
@@ -302,14 +306,14 @@ export default {
   background: transparent;
   border: none;
   border-radius: 4px;
-  color: #94a3b8;
+  color: var(--color-panel-text-secondary);
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .clear-search:hover {
-  background: #e2e8f0;
-  color: #64748b;
+  background: var(--color-surface-hover);
+  color: var(--color-panel-text-heading);
 }
 
 .clear-search svg {
@@ -321,11 +325,11 @@ export default {
 .error {
   padding: 2rem;
   text-align: center;
-  color: #64748b;
+  color: var(--color-text-secondary);
 }
 
 .error {
-  color: #ef4444;
+  color: var(--color-stat-danger);
 }
 
 .clickable-row {
@@ -334,6 +338,6 @@ export default {
 }
 
 .clickable-row:hover {
-  background: #eff6ff !important;
+  background: var(--color-accent-bg) !important;
 }
 </style>

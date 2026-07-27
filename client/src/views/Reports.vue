@@ -27,10 +27,10 @@
             <tbody>
               <tr v-for="(q, index) in quarterlyData" :key="index">
                 <td><strong>{{ q.quarter }}</strong></td>
-                <td>{{ q.total_orders }}</td>
-                <td>${{ formatNumber(q.total_revenue) }}</td>
-                <td>${{ formatNumber(q.avg_order_value) }}</td>
-                <td>
+                <td class="numeric">{{ q.total_orders }}</td>
+                <td class="numeric">${{ formatNumber(q.total_revenue) }}</td>
+                <td class="numeric">${{ formatNumber(q.avg_order_value) }}</td>
+                <td class="numeric">
                   <span :class="getFulfillmentClass(q.fulfillment_rate)">
                     {{ q.fulfillment_rate }}%
                   </span>
@@ -81,15 +81,15 @@
             <tbody>
               <tr v-for="(month, index) in monthlyData" :key="index">
                 <td><strong>{{ formatMonth(month.month) }}</strong></td>
-                <td>{{ month.order_count }}</td>
-                <td>${{ formatNumber(month.revenue) }}</td>
-                <td>
+                <td class="numeric">{{ month.order_count }}</td>
+                <td class="numeric">${{ formatNumber(month.revenue) }}</td>
+                <td class="numeric">
                   <span v-if="index > 0" :class="getChangeClass(month.revenue, monthlyData[index - 1].revenue)">
                     {{ getChangeValue(month.revenue, monthlyData[index - 1].revenue) }}
                   </span>
                   <span v-else>-</span>
                 </td>
-                <td>
+                <td class="numeric">
                   <span v-if="index > 0" :class="getChangeClass(month.revenue, monthlyData[index - 1].revenue)">
                     {{ getGrowthRate(month.revenue, monthlyData[index - 1].revenue) }}
                   </span>
@@ -322,11 +322,11 @@ export default {
 }
 
 .card {
-  background: white;
-  border-radius: 12px;
+  background: var(--color-panel);
+  border-radius: var(--radius-panel);
   padding: 1.5rem;
   margin-bottom: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-card);
 }
 
 .card-header {
@@ -336,7 +336,7 @@ export default {
 .card-title {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #0f172a;
+  color: var(--color-panel-text-heading);
   margin: 0;
 }
 
@@ -346,26 +346,32 @@ export default {
 }
 
 .reports-table th {
-  background: #f8fafc;
+  background: var(--color-surface-hover);
   padding: 0.75rem;
   text-align: left;
   font-weight: 600;
-  color: #64748b;
-  border-bottom: 2px solid #e2e8f0;
+  color: var(--color-text-table-header);
+  border-bottom: 2px solid var(--color-border);
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .reports-table td {
   padding: 0.75rem;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--color-border-subtle);
 }
 
 .reports-table tr:hover {
-  background: #f8fafc;
+  background: var(--color-surface-hover);
 }
 
 .chart-container {
   padding: 2rem 1rem;
   min-height: 300px;
+  /* Technical-schematic/graph-paper surface. --color-bg-texture is `none` in
+     Light (no-op) and a subtle navy-on-navy grid in Retro. */
+  background-image: var(--color-bg-texture);
 }
 
 .bar-chart {
@@ -393,20 +399,20 @@ export default {
 
 .bar {
   width: 100%;
-  background: linear-gradient(to top, #3b82f6, #60a5fa);
+  background: linear-gradient(to top, var(--color-accent-hover), var(--color-accent-bg));
   border-radius: 4px 4px 0 0;
   transition: all 0.3s;
   cursor: pointer;
 }
 
 .bar:hover {
-  background: linear-gradient(to top, #2563eb, #3b82f6);
+  background: linear-gradient(to top, var(--color-accent), var(--color-accent-hover));
 }
 
 .bar-label {
   margin-top: 0.5rem;
   font-size: 0.75rem;
-  color: #64748b;
+  color: var(--color-panel-text-secondary);
   text-align: center;
   transform: rotate(-45deg);
   white-space: nowrap;
@@ -421,23 +427,23 @@ export default {
 }
 
 .stat-card {
-  background: white;
-  border-radius: 12px;
+  background: var(--color-panel);
+  border-radius: var(--radius-panel);
   padding: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  border-left: 4px solid #3b82f6;
+  box-shadow: var(--shadow-card);
+  border-left: 4px solid var(--color-accent);
 }
 
 .stat-label {
   font-size: 0.875rem;
-  color: #64748b;
+  color: var(--color-panel-text-secondary);
   margin-bottom: 0.5rem;
 }
 
 .stat-value {
   font-size: 1.875rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--color-panel-text-heading);
 }
 
 .badge {
@@ -447,42 +453,67 @@ export default {
   font-weight: 500;
 }
 
+.badge::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-right: 0.375rem;
+}
+
 .badge.success {
-  background: #dcfce7;
-  color: #166534;
+  background: var(--color-status-success-bg);
+  color: var(--color-status-success-text);
+}
+
+.badge.success::before {
+  box-shadow: 0 0 0 1px var(--color-stat-success);
 }
 
 .badge.warning {
-  background: #fef3c7;
-  color: #92400e;
+  background: var(--color-status-warning-bg);
+  color: var(--color-status-warning-text);
+}
+
+.badge.warning::before {
+  box-shadow: 0 0 0 1px var(--color-stat-warning);
 }
 
 .badge.danger {
-  background: #fee2e2;
-  color: #991b1b;
+  background: var(--color-status-danger-bg);
+  color: var(--color-status-danger-text);
+}
+
+.badge.danger::before {
+  box-shadow: 0 0 0 1px var(--color-stat-danger);
 }
 
 .positive-change {
-  color: #16a34a;
+  color: var(--color-stat-success);
   font-weight: 600;
 }
 
 .negative-change {
-  color: #dc2626;
+  color: var(--color-stat-danger);
   font-weight: 600;
 }
 
 .loading {
   text-align: center;
   padding: 3rem;
-  color: #64748b;
+  color: var(--color-text-secondary);
 }
 
 .error {
-  background: #fee2e2;
-  color: #991b1b;
+  background: var(--color-error-bg);
+  color: var(--color-error-text);
   padding: 1rem;
-  border-radius: 8px;
+  border-radius: var(--radius-alert);
   margin: 1rem 0;
+}
+
+.numeric {
+  font-family: var(--font-mono);
 }
 </style>
