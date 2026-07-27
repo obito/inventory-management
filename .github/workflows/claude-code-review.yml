@@ -21,8 +21,10 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: read
-      issues: read
+      # write (not read) is required for the action to post its review;
+      # with read-only it is denied, posts nothing, and still exits 0
+      pull-requests: write
+      issues: write
       id-token: write
 
     steps:
